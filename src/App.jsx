@@ -9,6 +9,9 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState("")
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -48,6 +51,30 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedBlogappUser")
+    setUser(null)
+  }
+
+  const handleCreate = async (event) => {
+    event.preventDefault()
+
+    const newBlog = {
+      title,
+      author,
+      url
+    }
+    try {
+      const returnedBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle("")
+      setAuthor("")
+      setUrl("")
+    } catch (error) {
+      console.log("Blog creation failed:", error)
+    }
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -72,22 +99,56 @@ const App = () => {
     </form>
   )
 
-  const noteForm = () => (
+  const blogForm = () => (
     <>
     {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </>
   )
+  const createForm = () => (
+    <form onSubmit={handleCreate}>
+      <div>
+        title
+        <input
+        type="text"
+        value={title}
+        name="Title"
+        onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author
+        <input
+        type="text"
+        value={author}
+        name="Author"
+        onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url
+        <input
+        type="text"
+        value={url}
+        name="Url"
+        onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type='submit'>Create blog</button>
+    </form>
+  )
 
   return (
     <div>
       <h2>Blogs</h2>
       {!user && loginForm()}
-      {user && <div>
-        <p>{user.username} logged in</p>
-        <button onClick={{handleLogout}}>logout</button>
-        {noteForm()}
+      {user && 
+        <div>
+          <p>{user.username} logged in</p>
+          <button onClick={handleLogout}>logout</button>
+          {createForm()}
+          {blogForm()}
         </div>
       }
     </div>
