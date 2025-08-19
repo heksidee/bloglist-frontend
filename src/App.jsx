@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from "./services/login"
+import Notification from "./components/Notification"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState("")
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [notification, setNotification] = useState({ message: null, type: null })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -43,10 +44,14 @@ const App = () => {
       setUser(user)
       setUsername("")
       setPassword("")
-    } catch (exception) {
-      setErrorMessage("wrong credentials")
+      setNotification({ message: `User ${username} logged in`, type: "success" })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification({ message: null, type: null })
+      }, 5000)
+    } catch (error) {
+      setNotification({ message: "wrong username or password", type: "error" })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -70,8 +75,15 @@ const App = () => {
       setTitle("")
       setAuthor("")
       setUrl("")
+      setNotification({ message: `a new blog "${title}" by ${author} added`, type: "success" })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
     } catch (error) {
-      console.log("Blog creation failed:", error)
+      setNotification({ message: "Blog creation failed", type: "error" })
+      setTimeout(() => {
+        setNotification({ message: null, type: null })
+      }, 5000)
     }
   }
 
@@ -135,13 +147,14 @@ const App = () => {
         onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button type='submit'>Create blog</button>
+      <button type='submit'>Add blog</button>
     </form>
   )
 
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification notification={notification} />
       {!user && loginForm()}
       {user && 
         <div>
