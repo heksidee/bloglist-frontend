@@ -1,17 +1,17 @@
-import { useState } from "react"
-import blogs from "../services/blogs"
+import { useState } from 'react'
+import blogs from '../services/blogs'
 
 const Blog = ({ blog, user }) => {
-const [showDetails, setShowDetails] = useState(false)
-const [likes, setLikes] = useState(blog.likes)
+  const [showDetails, setShowDetails] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
-const isOwner = blog.user?.id === user?.id
+  const isOwner = blog.user?.id === user?.id
 
   const blogStyle = {
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 3,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5
   }
@@ -31,27 +31,27 @@ const isOwner = blog.user?.id === user?.id
   return (
     <div style={blogStyle}>
       {showDetails ? (
-         <>
+        <>
           <div>
             {blog.title} {blog.author}
-            <button onClick={() =>setShowDetails(false)}>Hide</button>
-            </div>
+            <button onClick={() => setShowDetails(false)}>Hide</button>
+          </div>
           <div>{blog.url}</div>
           <div>
             Likes: {likes}
             <button onClick={handleLikes}>Like</button>
           </div>
-          <div>Added by: {blog.user?.username || "unknown"} </div>
+          <div>Added by: {blog.user?.username || 'unknown'} </div>
           {isOwner && (
             <button onClick={handleDelete}>Delete</button>
           )}
-         </>
-        ) : (
-          <div>
-            {blog.title} {blog.author}
-            <button onClick={() => setShowDetails(true)}>View</button>
-          </div>
-        )}
+        </>
+      ) : (
+        <div>
+          {blog.title} {blog.author}
+          <button onClick={() => setShowDetails(true)}>View</button>
+        </div>
+      )}
     </div>
   )
 }
