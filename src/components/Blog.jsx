@@ -5,9 +5,6 @@ const Blog = ({ blog, user }) => {
 const [showDetails, setShowDetails] = useState(false)
 const [likes, setLikes] = useState(blog.likes)
 
-console.log("user in Blog.jsx:", user)
-console.log("blog.user:", blog.user)
-
 const isOwner = blog.user?.id === user?.id
 
   const blogStyle = {
