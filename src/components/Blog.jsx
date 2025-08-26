@@ -38,7 +38,7 @@ const Blog = ({ blog, user }) => {
           </div>
           <div>{blog.url}</div>
           <div>
-            Likes: {likes}
+            {`Likes: ${likes}`}
             <button onClick={handleLikes}>Like</button>
           </div>
           <div>Added by: {blog.user?.username || 'unknown'} </div>
