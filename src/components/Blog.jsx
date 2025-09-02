@@ -47,7 +47,7 @@ const Blog = ({ blog, user }) => {
           )}
         </>
       ) : (
-        <div>
+        <div class={"playwrightblog"}>
           {blog.title} {blog.author}
           <button onClick={() => setShowDetails(true)}>View</button>
         </div>
