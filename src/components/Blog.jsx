@@ -32,7 +32,7 @@ const Blog = ({ blog, user }) => {
     <div style={blogStyle}>
       {showDetails ? (
         <>
-          <div>
+          <div className={"playwrightblog"}>
             {blog.title} {blog.author}
             <button onClick={() => setShowDetails(false)}>Hide</button>
           </div>
