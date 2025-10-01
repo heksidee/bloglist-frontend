@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import blogService from '../services/blogs';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateLikes, deleteBlog } from '../redux/blogSlice';
 
-const Blog = ({ blog, user, blogs, setBlogs }) => {
+const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
 
+  const dispatch = useDispatch();
+
+  const blogs = useSelector((state) => state.blogs);
+  const currentBlog = blogs.find((b) => b.id === blog.id);
+  const user = useSelector((state) => state.user);
   const isOwner = blog.user?.id === user?.id;
 
   const blogStyle = {
@@ -16,16 +21,14 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
     marginBottom: 5,
   };
 
-  const handleLikes = async () => {
-    const updatedBlog = await blogService.updateLikes(blog.id, likes + 1);
-    setLikes(updatedBlog.likes);
+  const handleLikes = () => {
+    dispatch(updateLikes(currentBlog));
   };
 
   const handleDelete = async () => {
     const confirm = window.confirm(`Sure you want to delete blog ${blog.title} by ${blog.author}?`);
     if (confirm) {
-      await blogService.remove(blog.id);
-      setBlogs(blogs.filter((b) => b.id !== blog.id));
+      dispatch(deleteBlog(blog.id));
     }
   };
 
@@ -39,7 +42,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
           </div>
           <div>{blog.url}</div>
           <div>
-            {`Likes: ${likes}`}
+            {`Likes: ${currentBlog.likes}`}
             <button onClick={handleLikes}>Like</button>
           </div>
           <div>Added by: {blog.user?.username || 'unknown'} </div>

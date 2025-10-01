@@ -1,89 +1,60 @@
 import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
-import blogService from './services/blogs';
-import loginService from './services/login';
 import Notification from './components/Notification';
 import AddBlogForm from './components/AddBlogForm';
 import Togglable from './components/Togglable';
+import { useDispatch, useSelector } from 'react-redux';
+import { setNotification, clearNotification } from './redux/notificationSlice';
+import { fetchBlogs, createBlog } from './redux/blogSlice';
+import { loginUser, logout, restoreUser } from './redux/userSlice';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({ message: null, type: null });
+
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      const sorted = blogs.sort((a, b) => b.likes - a.likes);
-      setBlogs(sorted);
-    });
-  }, []);
+    dispatch(fetchBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
+    dispatch(restoreUser());
+  }, [dispatch]);
+
+  const notify = (message, type = 'success') => {
+    dispatch(setNotification({ message, type }));
+    setTimeout(() => {
+      dispatch(clearNotification());
+    }, 5000);
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await loginService.login({
-        username,
-        password,
-      });
-
-      const user = {
-        username: response.username,
-        name: response.name,
-        token: response.token,
-        id: response.id,
-      };
-
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
+      await dispatch(loginUser({ username, password }));
       setUsername('');
       setPassword('');
-      setNotification({ message: `User ${username} logged in`, type: 'success' });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
+      notify(`User ${username} logged in`, 'success');
     } catch (error) {
-      setNotification({ message: 'wrong username or password', type: 'error' });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
+      notify('wrong username or password', 'error');
     }
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser');
-    setUser(null);
+    dispatch(logout());
   };
 
   const handleCreate = async (blog) => {
     try {
-      const returnedBlog = await blogService.create(blog);
-      setBlogs(blogs.concat(returnedBlog));
-      setNotification({
-        message: `a new blog "${blog.title}" by ${blog.author} added`,
-        type: 'success',
-      });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
+      await dispatch(createBlog(blog));
+      notify(`a new blog "${blog.title}" by ${blog.author} added`, 'success');
       blogFormRef.current.toggleVisibility();
     } catch (error) {
-      setNotification({ message: 'Blog creation failed', type: 'error' });
-      setTimeout(() => {
-        setNotification({ message: null, type: null });
-      }, 5000);
+      notify('Blog creation failed', 'error');
     }
   };
 
@@ -118,7 +89,7 @@ const App = () => {
   const blogForm = () => (
     <>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} blogs={blogs} setBlogs={setBlogs} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </>
   );
@@ -128,7 +99,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
       {!user && loginForm()}
       {user && (
         <div>
