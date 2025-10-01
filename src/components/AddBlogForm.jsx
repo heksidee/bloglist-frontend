@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 const AddBlogForm = ({ onCreate }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [ url, setUrl] = useState('')
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
   const handleSubmit = (event) => {
-    event.preventDefault()
-    onCreate({ title, author, url })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+    event.preventDefault();
+    onCreate({ title, author, url });
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -23,7 +23,7 @@ const AddBlogForm = ({ onCreate }) => {
             type="text"
             value={title}
             name="Title"
-            placeholder='Title'
+            placeholder="Title"
             onChange={({ target }) => setTitle(target.value)}
           />
         </label>
@@ -35,7 +35,7 @@ const AddBlogForm = ({ onCreate }) => {
             type="text"
             value={author}
             name="Author"
-            placeholder='Author'
+            placeholder="Author"
             onChange={({ target }) => setAuthor(target.value)}
           />
         </label>
@@ -47,13 +47,13 @@ const AddBlogForm = ({ onCreate }) => {
             type="text"
             value={url}
             name="Url"
-            placeholder='Url'
+            placeholder="Url"
             onChange={({ target }) => setUrl(target.value)}
           />
         </label>
       </div>
-      <button type='submit'>Add blog</button>
+      <button type="submit">Add blog</button>
     </form>
-  )
-}
-export default AddBlogForm
+  );
+};
+export default AddBlogForm;

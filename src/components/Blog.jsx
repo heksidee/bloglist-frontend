@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import blogService from '../services/blogs'
+import { useState } from 'react';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog, user, blogs, setBlogs }) => {
-  const [showDetails, setShowDetails] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
+  const [showDetails, setShowDetails] = useState(false);
+  const [likes, setLikes] = useState(blog.likes);
 
-  const isOwner = blog.user?.id === user?.id
+  const isOwner = blog.user?.id === user?.id;
 
   const blogStyle = {
     paddingTop: 5,
@@ -13,24 +13,24 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
     paddingLeft: 3,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
-  }
+    marginBottom: 5,
+  };
 
   const handleLikes = async () => {
-    const updatedBlog = await blogService.updateLikes(blog.id, likes + 1)
-    setLikes(updatedBlog.likes)
-  }
+    const updatedBlog = await blogService.updateLikes(blog.id, likes + 1);
+    setLikes(updatedBlog.likes);
+  };
 
   const handleDelete = async () => {
-    const confirm = window.confirm(`Sure you want to delete blog ${blog.title} by ${blog.author}?`)
+    const confirm = window.confirm(`Sure you want to delete blog ${blog.title} by ${blog.author}?`);
     if (confirm) {
-      await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      await blogService.remove(blog.id);
+      setBlogs(blogs.filter((b) => b.id !== blog.id));
     }
-  }
+  };
 
   return (
-    <div className={"playwrightblog"} style={blogStyle}>
+    <div className={'playwrightblog'} style={blogStyle}>
       {showDetails ? (
         <>
           <div>
@@ -43,9 +43,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
             <button onClick={handleLikes}>Like</button>
           </div>
           <div>Added by: {blog.user?.username || 'unknown'} </div>
-          {isOwner && (
-            <button onClick={handleDelete}>Delete</button>
-          )}
+          {isOwner && <button onClick={handleDelete}>Delete</button>}
         </>
       ) : (
         <div>
@@ -54,7 +52,7 @@ const Blog = ({ blog, user, blogs, setBlogs }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
