@@ -1,19 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
-import Blog from './components/Blog';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Notification from './components/Notification';
-import AddBlogForm from './components/AddBlogForm';
-import Togglable from './components/Togglable';
+import Home from './components/Home';
+import Users from './components/Users';
+import User from './components/User';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotification, clearNotification } from './redux/notificationSlice';
 import { fetchBlogs, createBlog } from './redux/blogSlice';
-import { loginUser, logout, restoreUser } from './redux/userSlice';
+import { loginUser, restoreUser } from './redux/userSlice';
+import { fetchUsers } from './redux/usersSlice';
 
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
+  const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -22,6 +26,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(restoreUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   const notify = (message, type = 'success') => {
@@ -42,10 +50,6 @@ const App = () => {
     } catch (error) {
       notify('wrong username or password', 'error');
     }
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
   };
 
   const handleCreate = async (blog) => {
@@ -86,31 +90,49 @@ const App = () => {
     </form>
   );
 
-  const blogForm = () => (
-    <>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </>
-  );
-
   const blogFormRef = useRef();
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <Navbar />
+      <h2>Blog App</h2>
       <Notification />
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <p>{user.username} logged in</p>
-          <button onClick={handleLogout}>logout</button>
-          <Togglable buttonLabel="New blog" ref={blogFormRef}>
-            <AddBlogForm onCreate={handleCreate} />
-          </Togglable>
-          {blogForm()}
-        </div>
-      )}
+      <Routes>
+        <Route
+          path="/blogs"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <Users />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            !user ? (
+              loginForm()
+            ) : (
+              <Home user={user} blogFormRef={blogFormRef} handleCreate={handleCreate} />
+            )
+          }
+        />
+        <Route
+          path="/users/:id"
+          element={
+            <ProtectedRoute>
+              <User />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </div>
   );
 };
