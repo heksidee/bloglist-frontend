@@ -21,23 +21,46 @@ export const updateLikes = createAsyncThunk('blogs/updateLikes', async (blog) =>
   return updated;
 });
 
+export const addComment = createAsyncThunk('blogs/addComment', async ({ blogId, comment }) => {
+  const updatedBlog = await blogService.addComment(blogId, comment);
+  return updatedBlog;
+});
+
 const blogSlice = createSlice({
   name: 'blogs',
-  initialState: [],
-  reducers: {},
+  initialState: {
+    items: [],
+    commentDraft: '',
+  },
+  reducers: {
+    setCommentDraft(state, action) {
+      state.commentDraft = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBlogs.fulfilled, (_, action) => action.payload)
+      .addCase(fetchBlogs.fulfilled, (state, action) => {
+        state.items = action.payload;
+      })
       .addCase(createBlog.fulfilled, (state, action) => {
-        state.push(action.payload);
+        state.items.push(action.payload);
       })
       .addCase(updateLikes.fulfilled, (state, action) => {
-        return state.map((blog) => (blog.id === action.payload.id ? action.payload : blog));
+        state.items = state.items.map((blog) =>
+          blog.id === action.payload.id ? action.payload : blog
+        );
       })
       .addCase(deleteBlog.fulfilled, (state, action) => {
-        return state.filter((blog) => blog.id !== action.payload);
+        state.items = state.items.filter((blog) => blog.id !== action.payload);
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.items = state.items.map((blog) =>
+          blog.id === action.payload.id ? action.payload : blog
+        );
+        state.commentDraft = '';
       });
   },
 });
 
+export const { setCommentDraft } = blogSlice.actions;
 export default blogSlice.reducer;

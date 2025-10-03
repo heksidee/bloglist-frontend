@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Users from './components/Users';
 import User from './components/User';
 import ProtectedRoute from './components/ProtectedRoute';
+import Blog from './components/Blog';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotification, clearNotification } from './redux/notificationSlice';
 import { fetchBlogs, createBlog } from './redux/blogSlice';
@@ -129,6 +130,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <User />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blogs/:id"
+          element={
+            <ProtectedRoute>
+              <Blog />
             </ProtectedRoute>
           }
         />

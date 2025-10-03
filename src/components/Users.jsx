@@ -2,27 +2,16 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const Users = () => {
-  const blogs = useSelector((state) => state.blogs);
+  const users = useSelector((state) => state.users);
+  const blogs = useSelector((state) => state.blogs.items);
 
-  const userBlogCounts = blogs.reduce((acc, blog) => {
-    const user = blog.user;
-    if (!user) return acc;
-
-    const id = user.id;
-    if (!acc[id]) {
-      acc[id] = {
-        id: user.id,
-        username: user.username,
-        name: user.name,
-        count: 1,
-      };
-    } else {
-      acc[id].count += 1;
+  const blogCounts = blogs.reduce((acc, blog) => {
+    const userId = blog.user?.id;
+    if (userId) {
+      acc[userId] = (acc[userId] || 0) + 1;
     }
     return acc;
   }, {});
-
-  const users = Object.values(userBlogCounts);
 
   return (
     <div>
@@ -40,7 +29,7 @@ const Users = () => {
               <td>
                 <Link to={`/users/${user.id}`}>{user.name || user.username}</Link>
               </td>
-              <td>{user.count}</td>
+              <td>{blogCounts[user.id] || 0}</td>
             </tr>
           ))}
         </tbody>
