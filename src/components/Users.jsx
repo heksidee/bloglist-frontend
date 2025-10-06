@@ -27,9 +27,11 @@ const Users = () => {
           {users.map((user) => (
             <tr key={user.id}>
               <td>
-                <Link to={`/users/${user.id}`}>{user.name || user.username}</Link>
+                <Link to={`/users/${user.id}`} style={{ color: '#4B0082' }}>
+                  {user.name || user.username}
+                </Link>
               </td>
-              <td>{blogCounts[user.id] || 0}</td>
+              <td className="ps-4">{blogCounts[user.id] || 0}</td>
             </tr>
           ))}
         </tbody>

@@ -23,7 +23,9 @@ const Togglable = forwardRef(({ children, buttonLabel }, ref) => {
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>Cancel</button>
+        <button onClick={toggleVisibility} className="mt-2">
+          Cancel
+        </button>
       </div>
     </div>
   );

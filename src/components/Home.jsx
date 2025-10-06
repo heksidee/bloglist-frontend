@@ -5,9 +5,11 @@ import Togglable from './Togglable';
 const Home = ({ user, blogFormRef, handleCreate }) => {
   return (
     <>
-      <Togglable buttonLabel="New blog" ref={blogFormRef}>
-        <AddBlogForm onCreate={handleCreate} />
-      </Togglable>
+      <div className="mb-4">
+        <Togglable buttonLabel="New blog" ref={blogFormRef}>
+          <AddBlogForm onCreate={handleCreate} />
+        </Togglable>
+      </div>
       <BlogList />
     </>
   );

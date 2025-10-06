@@ -64,23 +64,32 @@ const App = () => {
   };
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label>
+    <form
+      onSubmit={handleLogin}
+      className="p-4 border rounded bg-light shadow-sm"
+      style={{ maxWidth: '400px' }}
+    >
+      <h2 className="mb-4">Login</h2>
+      <div className="mb-3">
+        <label htmlFor="username" className="form-label">
           username
           <input
             type="text"
+            className="form-control"
+            id="username"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
         </label>
       </div>
-      <div>
-        <label>
+      <div className="mb-3">
+        <label htmlFor="password" className="form-label">
           password
           <input
             type="password"
+            className="form-control"
+            id="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
@@ -94,9 +103,9 @@ const App = () => {
   const blogFormRef = useRef();
 
   return (
-    <div>
+    <div className="container custom-container">
       <Navbar />
-      <h2>Blog App</h2>
+      <h2 style={{ marginBottom: '1rem' }}>Blog App</h2>
       <Notification />
       <Routes>
         <Route

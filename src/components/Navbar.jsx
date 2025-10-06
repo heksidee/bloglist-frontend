@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const padding = {
-    padding: '1rem',
+    color: '#4B0082',
   };
 
   const handleLogout = () => {
@@ -17,17 +17,23 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div className="mt-2 d-flex justify-content-between align-items-center">
       {user && (
         <>
-          <Link style={padding} to="/blogs">
-            Blogs
-          </Link>
-          <Link style={padding} to="/users">
-            Users
-          </Link>
-          <span style={padding}>{user.username} logged in</span>
-          <button onClick={handleLogout}>Logout</button>
+          <div>
+            <Link style={padding} className="me-4" to="/blogs">
+              Blogs
+            </Link>
+            <Link style={padding} to="/users">
+              Users
+            </Link>
+          </div>
+          <div>
+            <span>{user.username} logged in</span>
+            <button onClick={handleLogout} className="ms-2">
+              Logout
+            </button>
+          </div>
         </>
       )}
     </div>

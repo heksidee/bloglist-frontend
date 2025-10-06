@@ -14,13 +14,15 @@ const AddBlogForm = ({ onCreate }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light">
       <h2>Create new blog</h2>
-      <div>
-        <label>
+      <div className="mb-3">
+        <label htmlFor="title" className="form-label">
           title
           <input
             type="text"
+            className="form-control"
+            id="title"
             value={title}
             name="Title"
             placeholder="Title"
@@ -28,11 +30,13 @@ const AddBlogForm = ({ onCreate }) => {
           />
         </label>
       </div>
-      <div>
-        <label>
+      <div className="mb-3">
+        <label htmlFor="author" className="form-label">
           author
           <input
             type="text"
+            className="form-control"
+            id="author"
             value={author}
             name="Author"
             placeholder="Author"
@@ -40,11 +44,13 @@ const AddBlogForm = ({ onCreate }) => {
           />
         </label>
       </div>
-      <div>
-        <label>
+      <div className="mb-3">
+        <label htmlFor="url" className="form-label">
           url
           <input
             type="text"
+            className="form-control"
+            id="url"
             value={url}
             name="Url"
             placeholder="Url"

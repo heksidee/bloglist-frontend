@@ -33,35 +33,47 @@ const Blog = () => {
 
   return (
     <>
-      <div className={'playwrightblog'}>
-        <div>
-          <h2>
-            {blog.title} by {blog.author}
+      <div className="card mb-4 bg-light shadow rounded">
+        <div className="card-body">
+          <h2 className="card-title">
+            {blog.title} <small className="text-muted">by {blog.author}</small>
           </h2>
+          <p className="card-text">
+            <a href={blog.url} target="_blank" rel="noopener noreferrer">
+              {blog.url}
+            </a>
+          </p>
+          <p className="card-text">
+            <strong>Likes:</strong>
+            <button onClick={handleLikes} className="ms-2">
+              {blog.likes}
+            </button>
+          </p>
+          <p className="card-text">
+            <strong>Added by: </strong>
+            {blog.user?.username || 'unknown'}{' '}
+          </p>
+          {isOwner && <button onClick={handleDelete}>Delete</button>}
         </div>
-        <div>{blog.url}</div>
-        <div>
-          {`Likes: ${blog.likes}`}
-          <button onClick={handleLikes}>Like</button>
-        </div>
-        <div>Added by: {blog.user?.username || 'unknown'} </div>
-        {isOwner && <button onClick={handleDelete}>Delete</button>}
       </div>
       <div>
         <h3>Comments</h3>
         <form onSubmit={handleComment}>
           <div>
-            <label>
-              comment
+            <label htmlFor="comment" className="form-label">
               <input
+                className="form-control bg-light"
+                id="comment"
                 type="text"
                 value={commentDraft}
                 onChange={(e) => dispatch(setCommentDraft(e.target.value))}
-                placeholder="Write commment"
+                placeholder="Write comment"
               />
             </label>
+            <button type="submit" className="ms-2">
+              Add
+            </button>
           </div>
-          <button type="submit">Add comment</button>
         </form>
         {blog.comments && blog.comments.length > 0 ? (
           <ul>
